@@ -26,6 +26,7 @@ signUpButton.addEventListener('click', (event) => {
             console.log(response.data);
         })
         .catch(error => {
+            alert('this account already exist')
             console.error(error);
         });
 });
