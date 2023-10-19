@@ -33,6 +33,7 @@
                     <input type="password" placeholder="Password" id="Password" required autocomplete="current-password"/>
                     <label></label>
                 </div>
+                <div class="msg" id="signupmessage"></div>
                 <button id="signup">Sign Up</button>
             </form>
         </div>
@@ -46,15 +47,16 @@
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" required/>
+                    <input type="email" placeholder="Email" name="email" id="loginemail" required/>
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" required autocomplete="current-password"/>
+                    <input type="password" placeholder="Password" id="loginpassword"required autocomplete="current-password"/>
                     <label></label>
                 </div>
+                <div class="msg" id="message"></div>
                 <a href="#" class="forgot">Forgot your password?</a>
-                <button>Sign In</button>
+                <button id="login">Login</button>
             </form>
         </div>
         <div class="overlay-container" id="overlayCon">
@@ -62,7 +64,7 @@
                 <div class="overlay-panel overlay-left">
                     <h1>Welcome Back!</h1>
                     <p>To keep connected with us, please log in with your personal info</p>
-                    <button>Sign In</button>
+                    <button>Login</button>
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Hello, Friend!</h1>

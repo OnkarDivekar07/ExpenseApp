@@ -7,6 +7,7 @@ const Controller = require('../controller/controller')
 
 
 router.post('/signup', Controller.signupdetails)
+router.post('/login',Controller.logindetails)
 
 
 
