@@ -61,7 +61,7 @@ loginbutton.addEventListener('click', (event) => {
         .then(response => {
             if (response.data.success) {
                
-                alert('Login successful');
+                window.location.href = '../view/expense.html'
             } else {
                 message.innerHTML = 'Invalid email or password';
                 message.style.color = 'red'

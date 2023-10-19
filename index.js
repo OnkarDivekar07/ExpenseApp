@@ -6,7 +6,7 @@ const users=require('./routes/route')
 app.use(cors())
 app.use(express.json())
 
-app.use('/user', users)
+app.use('/user',users)
 
 
 //this is to intialise database tables and then start the servers
