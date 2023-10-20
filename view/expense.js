@@ -13,7 +13,7 @@ async function saveExpense(event) {
     const expenseData = {
         amount,
         description,
-        catogary
+        catogary,
     };
 
     console.log(expenseData);
@@ -22,13 +22,14 @@ async function saveExpense(event) {
         console.log(button.dataset.id)
         if (button.dataset.id) {
             const expenseId = button.dataset.id;
-            const res = await axios.put(`http://localhost:4000/user/editexpense/${expenseId}`, expenseData);
+            const res = await axios.put(`http://localhost:4000/user/editexpense/${expenseId}`,expenseData);
             console.log('expense updated'); // Log a message indicating the expense was updated
 
             buttons(res.data)
 
         } else {
-            const res = await axios.post('http://localhost:4000/user/postexpense', expenseData);
+            const token = localStorage.getItem('token')
+            const res = await axios.post('http://localhost:4000/user/postexpense', expenseData, { headers: { "Authorization": token } });
             console.log('expense added');
             buttons(res.data);
         }
@@ -96,11 +97,13 @@ function buttons(responsedata) {
 
 
 window.addEventListener("DOMContentLoaded", async () => {
+   const token=localStorage.getItem('token')
     try {
-        let res = await axios.get('http://localhost:4000/user/getexpenses');
-        // console.log(res.data);
+        let res = await axios.get('http://localhost:4000/user/getexpenses', { headers: { "Authorization": token } });
+         console.log(res.data);
         for (var i = 0; i < res.data.length; i++) {
             buttons(res.data[i]);
+            console.log('show')
         }
     } catch (error) {
         console.log(error);

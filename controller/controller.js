@@ -1,8 +1,13 @@
 const  userdetailstable=require('../model/userdetails')
 const expense = require('../model/expensemodel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const users = require('../model/userdetails');
 
-
+function genrateAcesstoken(id){
+   return jwt.sign({userid:id},"8668442638@121021@24407#1722")
+}
+ 
 
 exports.signupdetails =  async (req, res, next) => {
         try {
@@ -33,18 +38,19 @@ exports.signupdetails =  async (req, res, next) => {
 
 exports.logindetails = async (req, res) => {
     const { email, password } = req.body;
-
     try {
         // Find the user by email
         const user = await userdetailstable.findOne({ where: { Email: email } });
-
+    
         if (user) {
             // Compare the provided password with the hashed password in the database
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (passwordMatch) {
                 // Passwords match, login successful
-                return res.json({ success: true, message: 'Login successful' });
+                const token = genrateAcesstoken(user.id);
+                console.log(user.id)
+                return res.json({ success: true, message: 'Login successful', token: token });
             } else {
                 // Password doesn't match, return an error message
                 return res.json({ success: false, message: 'Incorrect password' });
@@ -61,28 +67,28 @@ exports.logindetails = async (req, res) => {
     }
 };
 exports.getexpense = (req, res) => {
-    console.log('expense data send')
-    expense.findAll()
+    console.log('expense data send');
+    console.log(req.userId.userid)
+    expense.findAll({ where: { userId: req.userId.userid } })
         .then((result) => {
-            res.status(200).json(result);
+             res.send(result);
         })
         .catch((err) => {
             console.log(err);
-        })
-
-}
+        });
+};
 
 exports.postexpense = (req, res, next) => {
     console.log('expense added')
-    const id = req.params.id
     const amount = req.body.amount;
     const description = req.body.description;
     const catogary = req.body.catogary;
     expense.create({
         amount: amount,
         description: description,
-        catogary: catogary
-    }).then((result) => {
+        catogary: catogary,
+        userId: req.userId.userid
+}).then((result) => {
         res.send(result);
     })
         .catch((err) => {

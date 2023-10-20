@@ -57,12 +57,14 @@ loginbutton.addEventListener('click', (event) => {
 
     console.log(data);
 
-    axios.post('http://localhost:4000/user/login', data)
+    axios.post('http://localhost:4000/user/login',data)
         .then(response => {
             if (response.data.success) {
-               
+               console.log(response)
+               localStorage.setItem('token',response.data.token)
                 window.location.href = '../view/expense.html'
-            } else {
+            } 
+            else {
                 message.innerHTML = 'Invalid email or password';
                 message.style.color = 'red'
                 setTimeout(() => message.remove(), 5000);
