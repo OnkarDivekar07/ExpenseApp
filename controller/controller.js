@@ -1,8 +1,10 @@
-const  userdetailstable=require('../model/userdetails')
+const Sequelize = require('sequelize');
+const userdetailstable =require('../model/userdetails')
 const expense = require('../model/expensemodel');
+const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const users = require('../model/userdetails');
+const Order=require('../model/order')
 
 function genrateAcesstoken(id){
    return jwt.sign({userid:id},"8668442638@121021@24407#1722")
@@ -138,3 +140,36 @@ exports.deleteexpense = (req, res) => {
             res.status(500).send('Internal Server Error');
         });
 }
+
+
+exports.purchasepremium = async (req, res) => {
+    try {
+        var rzp = new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
+        const amount = 2500;
+    rzp.orders.create({amount,currency: "INR" },(err, order) => {
+           console.log(order)
+            if (err) {
+               console.log("it is errror")
+            }
+        Order.create({ orderid: order.id, status: "PENDING" }).then(()=>{
+        return res.status(201).json({ order, key_id: rzp.key_id });
+     }).catch (err=>{
+        throw new Error(err);
+         })
+        })    
+    }catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
+
+exports.updatetranctionstatus = async (req, res) => {
+    try {
+        const { payment_id, order_id } = req.body;
+      const order= await order.findOne({ where: { orderid: order_id } })
+           await order.update({ paymentid: payment_id, status: 'successful' })
+              await  req.userdetailstable.update({ ispremiumuser: true })
+        return res.status(202).json({ success: true, message: "Transaction successful" });
+     } catch (error) {
+        throw new Error(error);
+    }
+};

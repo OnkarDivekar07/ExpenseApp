@@ -17,10 +17,14 @@
         <div class="card">
             <div class="card-body">
                 <h1 class="card-header">Expense app</h1>
+                <div class="text-end premium-button">
+                    <button id="paybutton" class="btn btn-success" style="float: right;">Buy Premium Membership</button>
+                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                </div>
                 <form class="form-control" id="form">
                     <label for="amount" class="form-label">Amount</label>
                     <input type="number" id="amount" name="amount" class="form-control" required />
-                    <label for="description" class="form-label">Description</label>
+                    <label for "description" class="form-label">Description</label>
                     <input type="text" id="description" name="description" class="form-control" required />
                     <label for="catogary" class="form-label">Catogary</label>
                     <select id="catogary" class="form-select" name="catogary" required>
@@ -49,7 +53,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
-     <script src="expense.js"></script>
+    <script src="expense.js"></script>
 </body>
 
 </html>

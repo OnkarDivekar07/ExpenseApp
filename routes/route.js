@@ -14,6 +14,9 @@ router.get('/getexpenses', userauthenticate.verifyToken,Controller.getexpense)
 
 router.put(`/editexpense/:id`, Controller.putexpense)
 router.post('/postexpense', userauthenticate.verifyToken,Controller.postexpense);
+router.get('/purchasepremium', userauthenticate.verifyToken, Controller.purchasepremium)
+router.post('/updatetranctionstatus', userauthenticate.verifyToken, Controller.updatetranctionstatus);
+
 
 
 

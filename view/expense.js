@@ -1,3 +1,4 @@
+
 const form = document.querySelector('#form');
 const button = document.getElementById('button');
 
@@ -94,18 +95,44 @@ function buttons(responsedata) {
 }
 
 
+document.getElementById('paybutton').onclick = async function (e) {
+    const token = localStorage.getItem('token');
+    console.log(token)
+        const response = await axios.get('http://localhost:4000/user/purchasepremium',{
+            headers: {
+                "Authorization": token
+            }
+        });
 
+        console.log(response);
 
-window.addEventListener("DOMContentLoaded", async () => {
-   const token=localStorage.getItem('token')
-    try {
-        let res = await axios.get('http://localhost:4000/user/getexpenses', { headers: { "Authorization": token } });
-         console.log(res.data);
-        for (var i = 0; i < res.data.length; i++) {
-            buttons(res.data[i]);
-            console.log('show')
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})
+        var options = {
+            "key": response.data.key_id,
+            "order_id": response.data.order.id,
+            "handler": async function (response) {
+                try {
+                    await axios.post('http://localhost:4000/user/updatetranctionstatus', {
+                        order_id: options.order_id,
+                        payment_id: response.razorpay_payment_id,
+                    }, {
+                        headers: {
+                            "Authorization": token
+                        }
+                    });
+                    alert('Congratulations! You are now a premium user.');
+                } catch (paymentError) {
+                    console.log(paymentError);
+                    alert('Payment confirmation failed. Please contact support.');
+                }
+            }
+        };
+
+        const rzpl = new Razorpay(options); // Moved this line here
+        rzpl.open();
+        e.preventDefault();
+        rzpl.on('payment.failed', function (response) {
+            console.log(response);
+            alert('something went wrong');
+        });
+};
+
