@@ -94,45 +94,43 @@ function buttons(responsedata) {
     userTableBody.appendChild(row);
 }
 
-
 document.getElementById('paybutton').onclick = async function (e) {
     const token = localStorage.getItem('token');
-    console.log(token)
+   // console.log(token)
         const response = await axios.get('http://localhost:4000/user/purchasepremium',{
             headers: {
                 "Authorization": token
             }
         });
 
-        console.log(response);
-
-        var options = {
-            "key": response.data.key_id,
-            "order_id": response.data.order.id,
-            "handler": async function (response) {
-                try {
-                    await axios.post('http://localhost:4000/user/updatetranctionstatus', {
-                        order_id: options.order_id,
-                        payment_id: response.razorpay_payment_id,
-                    }, {
-                        headers: {
-                            "Authorization": token
-                        }
-                    });
-                    alert('Congratulations! You are now a premium user.');
-                } catch (paymentError) {
-                    console.log(paymentError);
-                    alert('Payment confirmation failed. Please contact support.');
-                }
+// console.log(response);  
+    var options = {
+        "key": response.data.key_id,
+        "order_id": response.data.order.id,
+        "handler":async function (response){
+        await axios.post('http://localhost:4000/user/updatetranctionstatus', {
+            order_id: options.order_id,
+            payment_id: response.razorpay_payment_id,
+        }, {
+            headers: {
+                "Authorization": token
             }
-        };
-
-        const rzpl = new Razorpay(options); // Moved this line here
-        rzpl.open();
-        e.preventDefault();
-        rzpl.on('payment.failed', function (response) {
-            console.log(response);
-            alert('something went wrong');
         });
+            alert('Congratulations! You are now a premium user.');
+            document.getElementById('paybutton').textContent = 'You are a Premium User';
+    }
+    }
+    console.log(options)
+    const rzpl= new Razorpay(options)
+    rzpl.open()
+    e.preventDefault();
+    rzpl.on('payment failed',function(response){
+        console.log(response)
+        alert('something went wrong')
+    })
 };
+
+
+
+
 

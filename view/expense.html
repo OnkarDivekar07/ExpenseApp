@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
     <title>Expense App</title>
 </head>
 
@@ -17,10 +17,6 @@
         <div class="card">
             <div class="card-body">
                 <h1 class="card-header">Expense app</h1>
-                <div class="text-end premium-button">
-                    <button id="paybutton" class="btn btn-success" style="float: right;">Buy Premium Membership</button>
-                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-                </div>
                 <form class="form-control" id="form">
                     <label for="amount" class="form-label">Amount</label>
                     <input type="number" id="amount" name="amount" class="form-control" required />
@@ -35,6 +31,10 @@
                     </select><br>
                     <button class="btn btn-primary" id="button" data-id="">Submit</button>
                 </form>
+                <div>
+                    <button id="paybutton" class="btn btn-success" style="float: right;">Buy Premium Membership</button>
+                    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                </div>
                 <br>
                 <table id="userTable" class="table">
                     <thead>

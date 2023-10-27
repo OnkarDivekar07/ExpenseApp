@@ -9,8 +9,6 @@ const order = require('./model/order')
 const cors=require('cors');
 const user=require('./routes/route')
 
-
-
 app.use(cors())
 app.use(express.json())
 
