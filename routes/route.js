@@ -10,12 +10,13 @@ router.post('/signup', Controller.signupdetails)
 router.post('/login',Controller.logindetails)
 router.delete(`/deleteexpense/:id`,Controller.deleteexpense)
 
-router.get('/getexpenses', userauthenticate.verifyToken,Controller.getexpense)
+router.get('/getexpenses', userauthenticate.verifyToken, Controller.getexpense)
 
 router.put(`/editexpense/:id`, Controller.putexpense)
 router.post('/postexpense', userauthenticate.verifyToken,Controller.postexpense);
 router.get('/purchasepremium', userauthenticate.verifyToken, Controller.purchasepremium)
 router.post('/updatetranctionstatus', userauthenticate.verifyToken, Controller.updatetranctionstatus);
+router.get('/leaderboard', userauthenticate.verifyToken, Controller.leaderboard)
 
 
 

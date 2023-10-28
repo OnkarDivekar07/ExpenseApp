@@ -6,8 +6,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Order=require('../model/order')
 
-function genrateAcesstoken(id){
-   return jwt.sign({userid:id},"8668442638@121021@24407#1722")
+function genrateAcesstoken(id, ispremiumuser){
+    return jwt.sign({ userid: id, ispremiumuser: ispremiumuser },"8668442638@121021@24407#1722")
 }
  
 
@@ -43,14 +43,15 @@ exports.logindetails = async (req, res) => {
     try {
         // Find the user by email
         const user = await userdetailstable.findOne({ where: { Email: email } });
-    
+
         if (user) {
             // Compare the provided password with the hashed password in the database
             const passwordMatch = await bcrypt.compare(password, user.password);
 
             if (passwordMatch) {
                 // Passwords match, login successful
-                const token = genrateAcesstoken(user.id);
+                console.log(user.ispremiumuser)
+                const token = genrateAcesstoken(user.id,user.ispremiumuser);
                 console.log(user.id)
                 return res.json({ success: true, message: 'Login successful', token: token });
             } else {
@@ -176,5 +177,47 @@ exports.updatetranctionstatus = async (req, res) => {
     })
      } catch (error) {
         throw new Error(error);
+    }
+};
+
+
+exports.leaderboard = async (req, res) => {
+    try {
+        // Assuming you have a model for user details with 'id' and 'name' fields
+        const userDetails = await userdetailstable.findAll({
+            attributes: ['id', 'Name'],
+        });
+
+        // Find all expenses and group them by user ID
+        const expenses = await expense.findAll({
+            attributes: [
+                [Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'],
+                'userId',
+            ],
+            group: ['userId'],
+        });
+
+        // Combine user details with their total expenses
+        const leaderboardData = userDetails.map((user) => {
+            const userExpenses = expenses.find((expense) =>
+                expense.userId === user.id
+            );
+
+            const totalAmount = userExpenses ? userExpenses.dataValues.totalAmount : 0;
+
+            return {
+                id: user.id,
+                name: user.Name,
+                totalAmount,
+            };
+        });
+
+        // Sort the leaderboard data by total amount in descending order
+        leaderboardData.sort((a, b) => b.totalAmount - a.totalAmount);
+
+        res.json(leaderboardData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'An error occurred' });
     }
 };

@@ -94,6 +94,43 @@ function buttons(responsedata) {
     userTableBody.appendChild(row);
 }
 
+function parseJwt(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+
+window.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem('token')
+    const decodedtoken = parseJwt(token)
+    console.log(decodedtoken)
+    const ispremiumuser=decodedtoken.ispremiumuser;
+    if (ispremiumuser) {
+        showpremiumusermessage();
+
+        // Show the Leaderboard button if the user is premium
+        showLeaderboardButton();
+    }
+    try {
+        let res = await axios.get('http://localhost:4000/user/getexpenses', { headers: { "Authorization": token } });
+        console.log(res.data);
+        for (var i = 0; i < res.data.length; i++) {
+            buttons(res.data[i]);
+            
+        }
+    } catch (error) {
+        console.log(error);
+
+    }
+
+})
+
+
 document.getElementById('paybutton').onclick = async function (e) {
     const token = localStorage.getItem('token');
    // console.log(token)
@@ -131,6 +168,64 @@ document.getElementById('paybutton').onclick = async function (e) {
 };
 
 
+function showpremiumusermessage(){
+    document.getElementById('paybutton').style.display = 'none';
+    document.getElementById('premiumusermsg').innerHTML = " you are a premium user now"
+   }
 
 
+function showLeaderboardButton() {
+    const leaderboardButton = document.createElement('button');
+    leaderboardButton.className = 'btn btn-primary';
+    leaderboardButton.textContent = 'Leaderboard';
+    leaderboardButton.style.float="right"
+    leaderboardButton.onclick = async function (e) {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:4000/user/leaderboard', {
+            headers: {
+                "Authorization": token
+            }
+        });
+        console.log(response);
+        // Process the response and display the leaderboard
+        displayLeaderboard(response.data);
+    };
 
+    // Append the "Leaderboard" button to the leaderboardContainer
+    const container = document.getElementById('leaderboardContainer');
+    container.appendChild(leaderboardButton);
+}
+
+
+function displayLeaderboard(leaderboardData) {
+    const leaderboardSection = document.getElementById('leaderboardSection');
+    leaderboardSection.innerHTML = ''; // Clear existing leaderboard content
+
+    const leaderboardHeading = document.createElement('h1');
+    leaderboardHeading.textContent = 'Leaderboard';
+    leaderboardSection.appendChild(leaderboardHeading);
+
+    const leaderboardTable = document.createElement('table');
+    leaderboardTable.className = 'table';
+    const leaderboardTableHeader = document.createElement('thead');
+    leaderboardTableHeader.innerHTML = `
+        <tr>
+            <th><strong>User</strong></th>
+            <th><strong>Total Expenses</strong></th>
+        </tr>
+    `;
+    leaderboardTable.appendChild(leaderboardTableHeader);
+
+    const leaderboardTableBody = document.createElement('tbody');
+    leaderboardData.forEach((user) => {
+        const userRow = document.createElement('tr');
+        userRow.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.totalAmount}</td>
+        `;
+        leaderboardTableBody.appendChild(userRow);
+    });
+
+    leaderboardTable.appendChild(leaderboardTableBody);
+    leaderboardSection.appendChild(leaderboardTable);
+}
