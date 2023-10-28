@@ -196,7 +196,6 @@ exports.leaderboard = async (req, res) => {
             ],
             group: ['userId'],
         });
-
         // Combine user details with their total expenses
         const leaderboardData = userDetails.map((user) => {
             const userExpenses = expenses.find((expense) =>
