@@ -194,7 +194,7 @@ exports.leaderboard = async (req, res) => {
                 [Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'],
                 'userId',
             ],
-            group: ['userId'],
+         group: ['userId'],
         });
         // Combine user details with their total expenses
         const leaderboardData = userDetails.map((user) => {
