@@ -154,7 +154,8 @@ document.getElementById('paybutton').onclick = async function (e) {
             }
         });
             alert('Congratulations! You are now a premium user.');
-            document.getElementById('paybutton').textContent = 'You are a Premium User';
+            document.getElementById('paybutton').style.display = 'none';
+            document.getElementById('premiumusermsg').innerHTML = " you are a premium user now"
     }
     }
     console.log(options)
@@ -200,11 +201,9 @@ function showLeaderboardButton() {
 function displayLeaderboard(leaderboardData) {
     const leaderboardSection = document.getElementById('leaderboardSection');
     leaderboardSection.innerHTML = ''; // Clear existing leaderboard content
-
     const leaderboardHeading = document.createElement('h1');
     leaderboardHeading.textContent = 'Leaderboard';
     leaderboardSection.appendChild(leaderboardHeading);
-
     const leaderboardTable = document.createElement('table');
     leaderboardTable.className = 'table';
     const leaderboardTableHeader = document.createElement('thead');
@@ -220,8 +219,8 @@ function displayLeaderboard(leaderboardData) {
     leaderboardData.forEach((user) => {
         const userRow = document.createElement('tr');
         userRow.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.totalAmount}</td>
+            <td>${user.Name}</td>
+            <td>${user.totalExpenses === null ? 0 : user.totalExpenses}</td>
         `;
         leaderboardTableBody.appendChild(userRow);
     });

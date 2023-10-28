@@ -81,25 +81,37 @@ exports.getexpense = (req, res) => {
         });
 };
 
-exports.postexpense = (req, res, next) => {
-    console.log('expense added')
-    const amount = req.body.amount;
-    const description = req.body.description;
-    const catogary = req.body.catogary;
-    expense.create({
-        amount: amount,
-        description: description,
-        catogary: catogary,
-        userId: req.userId.userid
-}).then((result) => {
-        res.send(result);
-    })
-        .catch((err) => {
-            console.log(err);
-        })
+exports.postexpense = async (req, res, next) => {
+    try {
+        const amount = parseInt(req.body.amount, 10)
+        const description = req.body.description;
+        const catogary = req.body.catogary;
+        const userId = req.userId.userid;
 
+        // Create a new expense
+        const newExpense = await expense.create({
+            amount,
+            description,
+            catogary,
+            userId,
+        });
+        // Update the totalExpenses column in the users table
+        const user = await userdetailstable.findByPk(userId);
+        if (user) {
+            if (user.totalExpenses === null) {
+                user.totalExpenses = amount;
+            } else {
+                user.totalExpenses += amount; // Add the new expense amount
+            }
+            await user.save();
+        }
 
-}
+        res.json(newExpense);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'An error occurred' });
+    }
+};
 
 
 exports.putexpense = (req, res) => {
@@ -183,36 +195,11 @@ exports.updatetranctionstatus = async (req, res) => {
 
 exports.leaderboard = async (req, res) => {
     try {
-        // Assuming you have a model for user details with 'id' and 'name' fields
-        const userDetails = await userdetailstable.findAll({
-            attributes: ['id', 'Name'],
+        // Assuming you have Sequelize models for user details (users)
+        const leaderboardData = await userdetailstable.findAll({
+            attributes: ['id', 'Name', 'totalExpenses'],
+            order: [['totalExpenses', 'DESC']],
         });
-
-        // Find all expenses and group them by user ID
-        const expenses = await expense.findAll({
-            attributes: [
-                [Sequelize.fn('SUM', Sequelize.col('amount')), 'totalAmount'],
-                'userId',
-            ],
-         group: ['userId'],
-        });
-        // Combine user details with their total expenses
-        const leaderboardData = userDetails.map((user) => {
-            const userExpenses = expenses.find((expense) =>
-                expense.userId === user.id
-            );
-
-            const totalAmount = userExpenses ? userExpenses.dataValues.totalAmount : 0;
-
-            return {
-                id: user.id,
-                name: user.Name,
-                totalAmount,
-            };
-        });
-
-        // Sort the leaderboard data by total amount in descending order
-        leaderboardData.sort((a, b) => b.totalAmount - a.totalAmount);
 
         res.json(leaderboardData);
     } catch (error) {

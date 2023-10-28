@@ -20,7 +20,8 @@ const users = sequelize.define('users', {
         type: Sequelize.STRING,
         allowNull: false,
     },
-    ispremiumuser: Sequelize.BOOLEAN
+    ispremiumuser: Sequelize.BOOLEAN,
+    totalExpenses: Sequelize.INTEGER
 });
 
 module.exports = users;
