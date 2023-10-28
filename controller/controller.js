@@ -87,7 +87,6 @@ exports.postexpense = async (req, res, next) => {
         const description = req.body.description;
         const catogary = req.body.catogary;
         const userId = req.userId.userid;
-
         // Create a new expense
         const newExpense = await expense.create({
             amount,
