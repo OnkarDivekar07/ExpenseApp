@@ -1,3 +1,4 @@
+const Sib = require('sib-api-v3-sdk')
 const Sequelize = require('sequelize');
 const userdetailstable =require('../model/userdetails')
 const expense = require('../model/expensemodel');
@@ -205,4 +206,40 @@ exports.leaderboard = async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, message: 'An error occurred' });
     }
+};
+exports.forgotpassword = (req, res) => {
+    // Assuming you have the user's email in the request body
+    const userEmail = req.body.email;
+
+    // Set the sender email address
+    const senderEmail = 'onkardivekar07@gmail.com'; // Replace with your sender email address
+
+    // Create an instance of the SendinBlue API client
+    const client = Sib.ApiClient.instance;
+
+    // Set your SendinBlue API key
+    const apikey = process.env.API_KEY;
+    client.authentications['api-key'].apiKey = apikey;
+
+    // Create an instance of the TransactionalEmailsApi
+    const transemail = new Sib.TransactionalEmailsApi();
+
+    // Define your email content (subject, HTML content, etc.)
+    const emailContent = {
+        sender: { email: senderEmail },
+        to: [{ email: userEmail }],
+        subject: "for forgot password",
+        textContent: "link to change password"
+    };
+
+    // Send the password reset email
+    transemail.sendTransacEmail(emailContent)
+        .then((data) => {
+            console.log('Password reset email sent:', data);
+            res.status(200).json({ message: 'Password reset email sent successfully' });
+        })
+        .catch((error) => {
+            console.error('Error sending password reset email:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        });
 };
