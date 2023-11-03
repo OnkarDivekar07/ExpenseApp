@@ -17,6 +17,12 @@ router.post('/postexpense', userauthenticate.verifyToken,Controller.postexpense)
 router.get('/purchasepremium', userauthenticate.verifyToken, Controller.purchasepremium)
 router.post('/updatetranctionstatus', userauthenticate.verifyToken, Controller.updatetranctionstatus);
 router.get('/leaderboard', userauthenticate.verifyToken, Controller.leaderboard)
+router.get('/updatepassword/:resetpasswordid', Controller.updatepassword)
+
+router.get('/resetpassword/:id', Controller.resetpassword)
+
+router.use('/forgotpassword', Controller.forgotpassword)
+
 
 
 

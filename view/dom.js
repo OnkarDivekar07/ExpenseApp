@@ -10,7 +10,8 @@ const loginpassword = document.getElementById('loginpassword')
 const loginbutton = document.getElementById('login')
 const message = document.getElementById('message')
 const signupmessage = document.getElementById('signupmessage')
-
+const forgotpassword = document.getElementById('forgotpassword');
+console.log(forgotpassword);
 overlayBtn.addEventListener('click', () => {
     container.classList.toggle('right-panel-active');
 });
