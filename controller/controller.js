@@ -1,4 +1,5 @@
-const Sib = require('sib-api-v3-sdk')
+const uuid = require('uuid');
+const sgMail = require('@sendgrid/mail');
 const Sequelize = require('sequelize');
 const userdetailstable =require('../model/userdetails')
 const expense = require('../model/expensemodel');
@@ -6,6 +7,13 @@ const Razorpay = require('razorpay')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Order=require('../model/order')
+const Forgotpassword = require('../model/forgotpassword');
+
+
+
+
+
+
 
 function genrateAcesstoken(id, ispremiumuser){
     return jwt.sign({ userid: id, ispremiumuser: ispremiumuser },"8668442638@121021@24407#1722")
@@ -207,39 +215,114 @@ exports.leaderboard = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred' });
     }
 };
-exports.forgotpassword = (req, res) => {
-    // Assuming you have the user's email in the request body
-    const userEmail = req.body.email;
+ 
+exports.forgotpassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await userdetailstable.findOne({ where: { email } });
+        console.log(user)
+        if (user) {
+            const id = uuid.v4();
+            user.createForgotpassword({ id, active: true })
+                .catch(err => {
+                    throw new Error(err)
+                })
 
-    // Set the sender email address
-    const senderEmail = 'onkardivekar07@gmail.com'; // Replace with your sender email address
+            sgMail.setApiKey(process.env.SENGRID_API_KEY)
 
-    // Create an instance of the SendinBlue API client
-    const client = Sib.ApiClient.instance;
+            const msg = {
+                to: email, // Change to your recipient
+                from: 'onkardivekar07@gmail.com', // Change to your verified sender
+                subject: 'Sending with SendGrid is Fun',
+                text: 'and easy to do anywhere, even with Node.js',
+                html: `<a href="http://localhost:4000/user/resetpassword/${id}">Reset password</a>`,
+            }
 
-    // Set your SendinBlue API key
-    const apikey = process.env.API_KEY;
-    client.authentications['api-key'].apiKey = apikey;
+            sgMail
+                .send(msg)
+                .then((response) => {
 
-    // Create an instance of the TransactionalEmailsApi
-    const transemail = new Sib.TransactionalEmailsApi();
+                    // console.log(response[0].statusCode)
+                    // console.log(response[0].headers)
+                    return res.status(response[0].statusCode).json({ message: 'Link to reset password sent to your mail ', sucess: true })
 
-    // Define your email content (subject, HTML content, etc.)
-    const emailContent = {
-        sender: { email: senderEmail },
-        to: [{ email: userEmail }],
-        subject: "for forgot password",
-        textContent: "link to change password"
-    };
+                })
+                .catch((error) => {
+                    throw new Error(error);
+                })
 
-    // Send the password reset email
-    transemail.sendTransacEmail(emailContent)
-        .then((data) => {
-            console.log('Password reset email sent:', data);
-            res.status(200).json({ message: 'Password reset email sent successfully' });
+            //send mail
+        } else {
+            throw new Error('User doesnt exist')
+        }
+    } catch (err) {
+        console.error(err)
+        return res.json({ message: err, sucess: false });
+    }
+
+}
+
+exports.resetpassword = (req, res) => {
+    const id = req.params.id;
+    Forgotpassword.findOne({ where: { id } }).then(forgotpasswordrequest => {
+        if (forgotpasswordrequest) {
+            forgotpasswordrequest.update({ active: false });
+            res.status(200).send(`<html>
+                                    <script>
+                                        function formsubmitted(e){
+                                            e.preventDefault();
+                                            console.log('called')
+                                        }
+                                    </script>
+
+                                    <form action="/user/updatepassword/${id}" method="get">
+                                        <label for="newpassword">Enter New password</label>
+                                        <input name="newpassword" type="password" required></input>
+                                        <button>reset password</button>
+                                    </form>
+                                </html>`
+            )
+            res.end()
+
+        }
+    })
+}
+
+exports.updatepassword = (req, res) => {
+
+    try {
+        const { newpassword } = req.query;
+        const { resetpasswordid } = req.params;
+        Forgotpassword.findOne({ where: { id: resetpasswordid } }).then(resetpasswordrequest => {
+            User.findOne({ where: { id: resetpasswordrequest.userId } }).then(user => {
+                // console.log('userDetails', user)
+                if (user) {
+                    //encrypt the password
+
+                    const saltRounds = 10;
+                    bcrypt.genSalt(saltRounds, function (err, salt) {
+                        if (err) {
+                            console.log(err);
+                            throw new Error(err);
+                        }
+                        bcrypt.hash(newpassword, salt, function (err, hash) {
+                            // Store hash in your password DB.
+                            if (err) {
+                                console.log(err);
+                                throw new Error(err);
+                            }
+                            user.update({ password: hash }).then(() => {
+                                res.status(201).json({ message: 'Successfuly update the new password' })
+                            })
+                        });
+                    });
+                } else {
+                    return res.status(404).json({ error: 'No user Exists', success: false })
+                }
+            })
         })
-        .catch((error) => {
-            console.error('Error sending password reset email:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        });
-};
+    } catch (error) {
+        return res.status(403).json({ error, success: false })
+    }
+
+}
