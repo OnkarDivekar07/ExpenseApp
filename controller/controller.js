@@ -8,10 +8,41 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Order=require('../model/order')
 const Forgotpassword = require('../model/forgotpassword');
+const AWS=require('aws-sdk')
 
 
+function uploadToS3(stringfyexpense, filename){
+    const BUCKET_NAME =process.env.BUCKET_NAME;
+    const IAM_USER_KEY=process.env.IAM_USER_KEY
+    const SECRET_KEY = process.env.SECRET_KEY
 
+    const s3Bucket=  new   AWS.S3({
+        accessKeyId: IAM_USER_KEY,
+        secretAccessKey: SECRET_KEY,
+        Bucket:BUCKET_NAME
+    })
+        var params={
+            Bucket:BUCKET_NAME,
+            Key:filename,
+            Body:stringfyexpense,
+            ACL:'public-read'
+        }
 
+    return new Promise((resolve, reject)=>{
+        s3Bucket.upload(params, (err, s3response) => {
+            if (err) {
+                console.log("something went wrong")
+                reject(err)
+            }
+            else {
+                console.log("sucess", s3response)
+                resolve (s3response.Location)
+            }
+        })
+    })
+        
+    
+}
 
 
 
@@ -326,3 +357,14 @@ exports.updatepassword = (req, res) => {
     }
 
 }
+
+
+exports.downloadExpenses = async (req, res) => {
+    const data= await expense.findAll({ where: { userId: req.userId.userid } })
+       console.log(data)
+       const stringfyexpense=JSON.stringify(data)
+   const userId= req.userId.userid
+    const filename = `Expense${userId}/${new Date()}.txt`
+       const fileurl=   await uploadToS3(stringfyexpense,filename)
+    res.status(201).json({ fileurl, success: true })
+};

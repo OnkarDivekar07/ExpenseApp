@@ -228,3 +228,24 @@ function displayLeaderboard(leaderboardData) {
     leaderboardTable.appendChild(leaderboardTableBody);
     leaderboardSection.appendChild(leaderboardTable);
 }
+
+function download() {
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:4000/user/download', { headers: { "Authorization": token } })
+        .then((response) => {
+            console.log(response)
+            if (response.status === 201) {
+                var a = document.createElement("a");
+                a.href = response.data.fileurl;
+                console.log(response)
+                a.download = 'myexpense.csv';
+                a.click();
+            } else {
+                throw new Error(response.data.message)
+            }
+
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
