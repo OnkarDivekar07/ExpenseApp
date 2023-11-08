@@ -1,7 +1,9 @@
 
 const form = document.querySelector('#form');
 const button = document.getElementById('button');
-
+let currentPage = 1;
+const itemsPerPage = 5; 
+let data;
 
 form.addEventListener('submit', saveExpense);
 
@@ -23,7 +25,7 @@ async function saveExpense(event) {
         console.log(button.dataset.id)
         if (button.dataset.id) {
             const expenseId = button.dataset.id;
-            const res = await axios.put(`http://localhost:4000/user/editexpense/${expenseId}`,expenseData);
+            const res = await axios.put(`http://localhost:4000/user/editexpense/${expenseId}`, expenseData);
             console.log('expense updated'); // Log a message indicating the expense was updated
 
             buttons(res.data)
@@ -41,7 +43,25 @@ async function saveExpense(event) {
     button.dataset.id = '';
 }
 
+function displayItemsForPage(data, page) {
+    const startIdx = (page - 1) * itemsPerPage;
+    const endIdx = startIdx + itemsPerPage;
+    const itemsToDisplay = data.slice(startIdx, endIdx);
 
+    userTableBody.innerHTML = ''; // Clear existing table content
+
+    itemsToDisplay.forEach((item) => {
+        buttons(item);
+    });
+}
+function updatePaginationControls(data) {
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+
+    // You can customize the pagination controls as needed, e.g., previous/next buttons
+    // For simplicity, I'm just updating the page number for this example
+    document.getElementById('currentPage').textContent = currentPage;
+    document.getElementById('totalPages').textContent = totalPages;
+}
 
 function buttons(responsedata) {
     const row = document.createElement('tr');
@@ -105,81 +125,104 @@ function parseJwt(token) {
 }
 
 
+// ... (Previous code)
+
 window.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem('token')
-    const decodedtoken = parseJwt(token)
-    console.log(decodedtoken)
-    const ispremiumuser=decodedtoken.ispremiumuser;
+    const token = localStorage.getItem('token');
+    const decodedtoken = parseJwt(token);
+    console.log(decodedtoken);
+    const ispremiumuser = decodedtoken.ispremiumuser;
     if (ispremiumuser) {
         showpremiumusermessage();
 
         // Show the Leaderboard button if the user is premium
         showLeaderboardButton();
+
+        showDownloadReportButton();
     }
     try {
         let res = await axios.get('http://localhost:4000/user/getexpenses', { headers: { "Authorization": token } });
-        console.log(res.data);
-        for (var i = 0; i < res.data.length; i++) {
-            buttons(res.data[i]);
-            
-        }
+        data = res.data; // Assign data at this point
+
+        // Calculate the total pages
+        const totalPages = Math.ceil(data.length / itemsPerPage);
+        updatePaginationControls(data, currentPage, totalPages);
+
+        displayItemsForPage(data, currentPage, itemsPerPage);
+
+        // Attach event listeners for pagination controls
+        document.getElementById('nextPageButton').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayItemsForPage(data, currentPage, itemsPerPage);
+                updatePaginationControls(data, currentPage, totalPages);
+            }
+        });
+
+        document.getElementById('prevPageButton').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayItemsForPage(data, currentPage, itemsPerPage);
+                updatePaginationControls(data, currentPage, totalPages);
+            }
+        });
     } catch (error) {
         console.log(error);
-
     }
+});
 
-})
+// ... (The rest of your code)
 
 
 document.getElementById('paybutton').onclick = async function (e) {
     const token = localStorage.getItem('token');
-   // console.log(token)
-        const response = await axios.get('http://localhost:4000/user/purchasepremium',{
-            headers: {
-                "Authorization": token
-            }
-        });
+    // console.log(token)
+    const response = await axios.get('http://localhost:4000/user/purchasepremium', {
+        headers: {
+            "Authorization": token
+        }
+    });
 
-// console.log(response);  
+    // console.log(response);  
     var options = {
         "key": response.data.key_id,
         "order_id": response.data.order.id,
-        "handler":async function (response){
-        await axios.post('http://localhost:4000/user/updatetranctionstatus', {
-            order_id: options.order_id,
-            payment_id: response.razorpay_payment_id,
-        }, {
-            headers: {
-                "Authorization": token
-            }
-        });
+        "handler": async function (response) {
+            await axios.post('http://localhost:4000/user/updatetranctionstatus', {
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id,
+            }, {
+                headers: {
+                    "Authorization": token
+                }
+            });
             alert('Congratulations! You are now a premium user.');
             document.getElementById('paybutton').style.display = 'none';
             document.getElementById('premiumusermsg').innerHTML = " you are a premium user now"
-    }
+        }
     }
     console.log(options)
-    const rzpl= new Razorpay(options)
+    const rzpl = new Razorpay(options)
     rzpl.open()
     e.preventDefault();
-    rzpl.on('payment failed',function(response){
+    rzpl.on('payment failed', function (response) {
         console.log(response)
         alert('something went wrong')
     })
 };
 
 
-function showpremiumusermessage(){
+function showpremiumusermessage() {
     document.getElementById('paybutton').style.display = 'none';
     document.getElementById('premiumusermsg').innerHTML = " you are a premium user now"
-   }
+}
 
 
 function showLeaderboardButton() {
     const leaderboardButton = document.createElement('button');
     leaderboardButton.className = 'btn btn-primary';
     leaderboardButton.textContent = 'Leaderboard';
-    leaderboardButton.style.float="right"
+    leaderboardButton.style.float = "right"
     leaderboardButton.onclick = async function (e) {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:4000/user/leaderboard', {
@@ -248,4 +291,34 @@ function download() {
         .catch((err) => {
             console.log(err);
         });
+}
+
+
+document.getElementById('nextPageButton').addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    const decodedtoken = parseJwt(token);
+    const ispremiumuser = decodedtoken.ispremiumuser;
+
+    if (currentPage < totalPages) {
+        currentPage++;
+        displayItemsForPage(data, currentPage);
+        updatePaginationControls(data);
+    }
+});
+
+document.getElementById('prevPageButton').addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    const decodedtoken = parseJwt(token);
+    const ispremiumuser = decodedtoken.ispremiumuser;
+
+    if (currentPage > 1) {
+        currentPage--;
+        displayItemsForPage(data, currentPage);
+        updatePaginationControls(data);
+    }
+});
+
+function showDownloadReportButton() {
+    const downloadButton = document.getElementById('downloadexpense');
+    downloadButton.style.display = 'block'; // Display the button
 }
