@@ -25,14 +25,14 @@ async function saveExpense(event) {
         console.log(button.dataset.id)
         if (button.dataset.id) {
             const expenseId = button.dataset.id;
-            const res = await axios.put(`http://localhost:4000/user/editexpense/${expenseId}`, expenseData);
+            const res = await axios.put(`http://localhost:4000/expense/editexpense/${expenseId}`, expenseData);
             console.log('expense updated'); // Log a message indicating the expense was updated
 
             buttons(res.data)
 
         } else {
             const token = localStorage.getItem('token')
-            const res = await axios.post('http://localhost:4000/user/postexpense', expenseData, { headers: { "Authorization": token } });
+            const res = await axios.post('http://localhost:4000/expense/postexpense', expenseData, { headers: { "Authorization": token } });
             console.log('expense added');
             buttons(res.data);
         }
@@ -97,7 +97,7 @@ function buttons(responsedata) {
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = () => {
         const deleteid = responsedata.id;
-        axios.delete(`http://localhost:4000/user/deleteexpense/${deleteid}`)
+        axios.delete(`http://localhost:4000/expense/deleteexpense/${deleteid}`)
             .then((response) => {
                 console.log(response)
             })
@@ -141,7 +141,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         showDownloadReportButton();
     }
     try {
-        let res = await axios.get('http://localhost:4000/user/getexpenses', { headers: { "Authorization": token } });
+        let res = await axios.get('http://localhost:4000/expense/getexpenses', { headers: { "Authorization": token } });
         data = res.data; // Assign data at this point
 
         // Calculate the total pages
@@ -177,7 +177,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 document.getElementById('paybutton').onclick = async function (e) {
     const token = localStorage.getItem('token');
     // console.log(token)
-    const response = await axios.get('http://localhost:4000/user/purchasepremium', {
+    const response = await axios.get('http://localhost:4000/purchase/purchasepremium', {
         headers: {
             "Authorization": token
         }
@@ -188,7 +188,7 @@ document.getElementById('paybutton').onclick = async function (e) {
         "key": response.data.key_id,
         "order_id": response.data.order.id,
         "handler": async function (response) {
-            await axios.post('http://localhost:4000/user/updatetranctionstatus', {
+            await axios.post('http://localhost:4000/purchase/updatetranctionstatus', {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
             }, {
@@ -225,7 +225,7 @@ function showLeaderboardButton() {
     leaderboardButton.style.float = "right"
     leaderboardButton.onclick = async function (e) {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:4000/user/leaderboard', {
+        const response = await axios.get('http://localhost:4000/expense/leaderboard', {
             headers: {
                 "Authorization": token
             }
@@ -274,7 +274,7 @@ function displayLeaderboard(leaderboardData) {
 
 function download() {
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:4000/user/download', { headers: { "Authorization": token } })
+    axios.get('http://localhost:4000/expense/download', { headers: { "Authorization": token } })
         .then((response) => {
             console.log(response)
             if (response.status === 201) {
