@@ -42,8 +42,6 @@ function uploadToS3(stringfyexpense, filename) {
 
 
 exports.getexpense = (req, res) => {
-    console.log('expense data send');
-    console.log(req.userId.userid)
     expense.findAll({ where: { userId: req.userId.userid } })
         .then((result) => {
             res.send(result);
@@ -81,37 +79,12 @@ exports.postexpense = async (req, res, next) => {
 
         res.json(newExpense);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ success: false, message: 'An error occurred' });
     }
 };
 
 
-
-
-
-
-exports.putexpense = (req, res) => {
-    console.log('expense updated');
-    const id = req.params.id;
-    const amount = req.body.amount;
-    const description = req.body.description;
-    const category = req.body.category
-    expense.findByPk(id)
-        .then(updated => {
-            updated.amount = amount;
-            updated.description = description;
-            updated.category = category;
-            return updated.save();
-        })
-        .then(updateddata => {
-            res.json(updateddata);
-        })
-        .catch(err => console.log(err));
-}
-
 exports.deleteexpense = (req, res) => {
-    console.log('row deleted');
     const id = req.params.id;
 
     expense.findByPk(id)

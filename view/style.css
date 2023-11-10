@@ -12,6 +12,14 @@
     --grad-clr2: #243B55;
 }
 
+#quote {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+    margin: 30px 0;
+}
+
 body {
     height: 100vh;
     background: #f6f5f7;

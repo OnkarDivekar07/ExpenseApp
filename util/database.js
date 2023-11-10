@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 
-const sequelize = new Sequelize('expensetracker', 'root', 'Divekar@210',
+const sequelize = new Sequelize('expensetracker', process.env.user,process.env.password,
     {
         dialect: 'mysql',
         host: 'localhost'

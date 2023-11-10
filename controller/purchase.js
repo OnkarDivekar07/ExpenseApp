@@ -4,14 +4,14 @@ const userdetailstable = require('../model/userdetails')
 const Razorpay = require('razorpay')
 
 const Order = require('../model/order')
-
+require('dotenv').config();
 
 
 
 exports.purchasepremium = async (req, res) => {
     try {
         var rzp = new Razorpay({ key_id: process.env.RAZORPAY_KEY_ID, key_secret: process.env.RAZORPAY_KEY_SECRET })
-        const amount = 2500;
+        const amount = process.env.amount;
         rzp.orders.create({ amount, currency: "INR" }, (err, order) => {
             // console.log(order)
             if (err) {
