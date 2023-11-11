@@ -1,58 +1,55 @@
 const uuid = require('uuid');
-const sgMail = require('@sendgrid/mail');
-const userdetailstable = require('../model/userdetails')
-const bcrypt = require('bcrypt');
-const Forgotpassword = require('../model/forgotpassword');
+const formData = require('form-data');
+require('dotenv').config();
+const Mailgun = require('mailgun.js');
+const userdetailstable=require('../model/userdetails')
 
+const mailgun = new Mailgun(formData);
+const client = mailgun.client({
+    username: 'api',
+    key: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN,
+});
 
-
-
+// ... (previous imports)
 
 exports.forgotpassword = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await userdetailstable.findOne({ where: { email } });
-        console.log(user)
+
         if (user) {
             const id = uuid.v4();
-            user.createForgotpassword({ id, active: true })
-                .catch(err => {
-                    throw new Error(err)
+            user.createForgotpassword({ id, active: true });
+
+            const link = `http://localhost:${process.env.PORT}/resetpassword/resetpassword/${id}`;
+            const messageData = {
+                from: 'Excited User <onkardivekar07@gmail.com>',
+                to: email,
+                subject: 'Reset Password',
+                text: `Click on the following link to reset your password: ${link}`,
+                html: `<a href="${link}">Reset password</a>`,
+            };
+
+            client.messages.create(process.env.MAILGUN_DOMAIN, messageData)
+                .then(() => {
+                    return res.status(202).json({ message: 'Link to reset password sent to your mail', success: true });
                 })
-
-            sgMail.setApiKey(process.env.SENGRID_API_KEY)
-
-            const msg = {
-                to: email, // Change to your recipient
-                from: 'onkardivekar07@gmail.com', // Change to your verified sender
-                subject: 'Sending with SendGrid is Fun',
-                text: 'and easy to do anywhere, even with Node.js',
-                html: `<a href="http://localhost:4000/user/resetpassword/${id}">Reset password</a>`,
-            }
-
-            sgMail
-                .send(msg)
-                .then((response) => {
-
-                    // console.log(response[0].statusCode)
-                    // console.log(response[0].headers)
-                    return res.status(response[0].statusCode).json({ message: 'Link to reset password sent to your mail ', sucess: true })
-
-                })
-                .catch((error) => {
-                    throw new Error(error);
-                })
-
-            //send mail
+                .catch(error => {
+                    console.error('Mailgun Error:', error);
+                    throw new Error('Error in sending email');
+                });
         } else {
-            throw new Error('User doesnt exist')
+            throw new Error("User doesn't exist");
         }
     } catch (err) {
-        console.error(err)
-        return res.json({ message: err, sucess: false });
+        console.error('General Error:', err);
+        return res.json({ message: err.message || 'An error occurred', success: false });
     }
+};
 
-}
+
+// The rest of your code remains the same...
 
 exports.resetpassword = (req, res) => {
     const id = req.params.id;
@@ -67,7 +64,7 @@ exports.resetpassword = (req, res) => {
                                         }
                                     </script>
 
-                                    <form action="/user/updatepassword/${id}" method="get">
+                                    <form action="/resetpassword/updatepassword/${id}" method="get">
                                         <label for="newpassword">Enter New password</label>
                                         <input name="newpassword" type="password" required></input>
                                         <button>reset password</button>

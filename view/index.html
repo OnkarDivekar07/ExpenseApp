@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,8 +11,9 @@
     <!-- CSS stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-     <p id="quote">"When you invest, you are buying a day that you don't have to work."</p>
+    <p id="quote">Never spend your money before you have it</p>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
             <form action="#">
@@ -23,15 +25,16 @@
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
-                    <input type="text"  name="name" placeholder="Name" id="name" required />
+                    <input type="text" name="name" placeholder="Name" id="name" required />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" id="email" required/>
+                    <input type="email" placeholder="Email" name="email" id="email" required />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" id="Password" required autocomplete="current-password"/>
+                    <input type="password" placeholder="Password" id="Password" required
+                        autocomplete="current-password" />
                     <label></label>
                 </div>
                 <div class="msg" id="signupmessage"></div>
@@ -48,111 +51,125 @@
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" id="loginemail" required/>
+                    <input type="email" placeholder="Email" name="email" id="loginemail" required />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" id="loginpassword"required autocomplete="current-password"/>
+                    <input type="password" placeholder="Password" id="loginpassword" required
+                        autocomplete="current-password" class="form-control" />
                     <label></label>
                 </div>
                 <div class="msg" id="message"></div>
-                <a href="email.html" class="forgot" id="forgotpassword" >Forgot your password?</a>
+                <a href="email.html" class="forgot" id="forgotpassword">Forgot your password?</a>
                 <button id="login">Login</button>
             </form>
         </div>
         <div class="overlay-container" id="overlayCon">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us, please log in with your personal info</p>
-                    <button>Login</button>
+                    <h1 class="loginandsignuppara">Welcome Back!</h1>
+                    <p class="para">To keep connected with us, please log in with your personal info</p>
+                    <button class="login">Login</button>
                 </div>
                 <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Enter your personal details and start your journey with us</p>
-                    <button>Sign Up</button>
+                    <h1 class="loginandsignuppara">Hello, Friend!</h1>
+                    <p class="para">Enter your personal details and start your journey with us</p>
+                    <button class="signup">Sign Up</button>
                 </div>
             </div>
             <button id="overlayBtn"></button>
         </div>
     </div>
     <!-- JavaScript code -->
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
         const container = document.getElementById('container');
-            const overlayCon = document.getElementById('overlayCon');
-            const overlayBtn = document.getElementById('overlayBtn');
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('Password');
-            const signUpButton = document.getElementById('signup');
-            const loginemail = document.getElementById('loginemail')
-            const loginpassword = document.getElementById('loginpassword')
-            const loginbutton = document.getElementById('login')
-            const message = document.getElementById('message')
-            const signupmessage = document.getElementById('signupmessage')
-            const forgotpassword = document.getElementById('forgotpassword');
-            console.log(forgotpassword);
-            overlayBtn.addEventListener('click', () => {
-                container.classList.toggle('right-panel-active');
-            });
+        const overlayCon = document.getElementById('overlayCon');
+        const overlayBtn = document.getElementById('overlayBtn');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('Password');
+        const signUpButton = document.getElementById('signup');
+        const loginemail = document.getElementById('loginemail')
+        const loginpassword = document.getElementById('loginpassword')
+        const loginbutton = document.getElementById('login')
+        const message = document.getElementById('message')
+        const signupmessage = document.getElementById('signupmessage')
+        const forgotpassword = document.getElementById('forgotpassword');
+        console.log(forgotpassword);
+        overlayBtn.addEventListener('click', () => {
+            container.classList.toggle('right-panel-active');
+        });
 
-            signUpButton.addEventListener('click', (event) => {
-                event.preventDefault();
+        signUpButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (!nameInput.value || !emailInput.value || !passwordInput.value) {
+                signupmessage.innerHTML = 'Please fill out all required fields';
+                signupmessage.style.color = 'red';
+                setTimeout(() => signupmessage.remove(), 5000);
+                return;
+            }
 
-                const data = {
-                    name: nameInput.value,
-                    email: emailInput.value,
-                    password: passwordInput.value,
-                };
+            const data = {
+                name: nameInput.value,
+                email: emailInput.value,
+                password: passwordInput.value,
+            };
 
-                axios.post('http://localhost:4000/user/signup', data)
-                    .then(response => {
-                        if (response.data.success) {
-                            alert('Account created successfully');
-                        } else {
-                            // Handle the case where the response indicates an error
-                            signupmessage.innerHTML = 'This Account already exists';
-                            signupmessage.style.color = 'red';
-                            setTimeout(() => signupmessage.remove(), 5000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        // Handle network or other errors here
-                        signupmessage.innerHTML = 'An error occurred';
+            axios.post('http://localhost:4000/user/signup', data)
+                .then(response => {
+                    if (response.data.success) {
+                        alert('Account created successfully');
+                    } else {
+                        // Handle the case where the response indicates an error
+                        signupmessage.innerHTML = 'This Account already exists';
                         signupmessage.style.color = 'red';
                         setTimeout(() => signupmessage.remove(), 5000);
-                    });
-            })
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    // Handle network or other errors here
+                    signupmessage.innerHTML = 'An error occurred';
+                    signupmessage.style.color = 'red';
+                    setTimeout(() => signupmessage.remove(), 5000);
+                });
+        })
 
-            loginbutton.addEventListener('click', (event) => {
-                event.preventDefault();
+        loginbutton.addEventListener('click', (event) => {
+            event.preventDefault();
+             if (!loginemail.value || !loginpassword.value) {
+                message.innerHTML = 'Please fill out all required fields';
+                message.style.color = 'red';
+                setTimeout(() => message.remove(), 5000);
+                return;
+            }
 
-                const data = {
-                    email: loginemail.value,
-                    password: loginpassword.value,
-                };
+            const data = {
+                email: loginemail.value,
+                password: loginpassword.value,
+            };
 
-                axios.post('http://localhost:4000/user/login', data)
-                    .then(response => {
-                        if (response.data.success) {
-                            console.log(response)
-                            localStorage.setItem('token', response.data.token)
-                            window.location.href = '../view/expense.html'
-                        }
-                        else {
-                            message.innerHTML = 'Invalid email or password';
-                            message.style.color = 'red'
-                            setTimeout(() => message.remove(), 5000);
-                        }
-                    })
-                    .catch(error => {
-                        alert('An error occurred during login');
-                        console.log(error);
-                    });
-            });
+            axios.post('http://localhost:4000/user/login', data)
+                .then(response => {
+                    if (response.data.success) {
+                        console.log(response)
+                        localStorage.setItem('token', response.data.token)
+                        window.location.href = '../view/expense.html'
+                    }
+                    else {
+                        message.innerHTML = 'Invalid email or password';
+                        message.style.color = 'red'
+                        setTimeout(() => message.remove(), 5000);
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred during login');
+                    console.log(error);
+                });
+        });
     </script>
 </body>
+
 </html>

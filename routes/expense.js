@@ -11,7 +11,7 @@ router.get('/getexpenses', userauthenticate.verifyToken, Controller.getexpense)
 
 router.post('/postexpense', userauthenticate.verifyToken, Controller.postexpense);
 
-router.delete(`/deleteexpense/:id`, Controller.deleteexpense)
+router.delete(`/deleteexpense/:id`,Controller.deleteexpense)
 
 router.get('/download', userauthenticate.verifyToken, Controller.downloadExpenses)
 

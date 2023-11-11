@@ -11,7 +11,7 @@ const userauthenticate = require('../middleware/auth')
 
 router.get('/updatepassword/:resetpasswordid', Controller.updatepassword)
 
-router.get('/resetpassword/:id', Controller.resetpassword)
+router.get('/resetpassword/:id',Controller.resetpassword)
 
 router.use('/forgotpassword', Controller.forgotpassword)
 

@@ -29,13 +29,13 @@ body {
 }
 
 .container {
-position: relative;
-width: 850px;
-height: 500px;
-background-color: #FFF;
-box-shadow: 25px 30px 55px #5557;
-border-radius: 13px;
-overflow: hidden;
+    position: relative;
+    width: 850px;
+    height: 500px;
+    background-color: #FFF;
+    box-shadow: 25px 30px 55px #5557;
+    border-radius: 13px;
+    overflow: hidden;
 }
 
 .form-container {
@@ -46,33 +46,33 @@ overflow: hidden;
     transition: all 0.6s ease-in-out;
 }
 
-.sign-up-container{
+.sign-up-container {
     opacity: 0;
     z-index: 1;
 }
 
-
 .sign-in-container {
-   z-index: 2;
+    z-index: 2;
 }
+
 form {
-height: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-padding: 0px 50px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 50px;
 }
 
-h1{
-    color:var(--grad-clr1)
+h1 {
+    color: var(--grad-clr1);
 }
 
-.social-container{
+.social-container {
     margin: 20px 0px;
 }
 
-.social-container a{
+.social-container a {
     border: 1px solid #DDD;
     border-radius: 50px;
     display: inline-flex;
@@ -82,8 +82,6 @@ h1{
     height: 40px;
     width: 40px;
 }
-
-
 
 footer {
     position: absolute;
@@ -108,11 +106,12 @@ span {
     font-size: 12px;
 }
 
-.infield{
+.infield {
     position: relative;
     margin: 8px 0px;
     width: 100%;
 }
+
 input {
     width: 100%;
     padding: 12px 15px;
@@ -131,10 +130,9 @@ label {
     background: var(--linear-grad);
     transition: 0.3s;
 }
-input:focus ~ label {
-width: 100%;
 
-
+input:focus~label {
+    width: 100%;
 }
 
 a {
@@ -149,7 +147,7 @@ a.forgot {
     border-bottom: 2px solid #EEE;
 }
 
-button{
+button {
     border-radius: 20px;
     border: 1px solid var(--grad-clr1);
     background: var(--grad-clr2);
@@ -161,7 +159,7 @@ button{
     text-transform: uppercase;
 }
 
-.form-container button{
+.form-container button {
     margin-top: 17px;
     transition: 80ms ease-in;
 }
@@ -171,7 +169,7 @@ button{
     color: var(--grad-clr1);
 }
 
-.overlay-container{
+.overlay-container {
     position: absolute;
     top: 0;
     left: 60%;
@@ -180,24 +178,20 @@ button{
     overflow: hidden;
     transition: transform 0.6s ease-in-out;
     z-index: 9;
-
 }
-
-
 
 #overlayBtn {
-cursor: pointer;
-position: absolute;
-left: 50%;
-top: 304px;
-transform: translateX(-50%);
-width: 143.67px;
-height: 40px;
-border: 1px solid #FFF;
-background: transparent;
-border-radius: 20px;
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top: 304px;
+    transform: translateX(-50%);
+    width: 143.67px;
+    height: 40px;
+    border: 1px solid #FFF;
+    background: transparent;
+    border-radius: 20px;
 }
-
 
 .overlay {
     position: relative;
@@ -209,8 +203,7 @@ border-radius: 20px;
     transition: transform 0.6s ease-in-out;
 }
 
-
-.overlay-panel{
+.overlay-panel {
     position: absolute;
     display: flex;
     align-items: center;
@@ -228,16 +221,16 @@ border-radius: 20px;
     transform: translateX(-12%);
 }
 
-.overlay-right{
+.overlay-right {
     right: 0;
     transform: translateX(0%);
 }
 
-.overlay-panel h1{
+.overlay-panel h1 {
     color: #FFF;
 }
 
-p{
+p {
     font-size: 14px;
     font-weight: 300;
     line-height: 20px;
@@ -245,32 +238,33 @@ p{
     margin: 25px 0px 35px;
 }
 
-.overlay-panel button{
+.overlay-panel button {
     border: none;
     background-color: transparent;
 }
 
-.right-panel-active .overlay-container{
+.right-panel-active .overlay-container {
     transform: translateX(-150%);
-
 }
-.right-panel-active .overlay{
+
+.right-panel-active .overlay {
     transform: translateX(50%);
 }
 
-.right-panel-active .overlay-left{
+.right-panel-active .overlay-left {
     transform: translateX(25%);
 }
 
-.right-panel-active .overlay-right{
+.right-panel-active .overlay-right {
     transform: translateX(35%);
 }
 
-.right-panel-active .sign-in-container{
+.right-panel-active .sign-in-container {
     transform: translateX(20%);
     opacity: 0;
 }
-.right-panel-active .sign-up-container{
+
+.right-panel-active .sign-up-container {
     transform: translateX(66.7%);
     opacity: 1;
     z-index: 5;
@@ -278,12 +272,81 @@ p{
 }
 
 @keyframes show {
-    0% ,50%{
+
+    0%,
+    50% {
         opacity: 0;
         z-index: 1;
     }
-    50.1% ,100%{
+
+    50.1%,
+    100% {
         opacity: 1;
         z-index: 5;
     }
+}
+
+/* Media Queries */
+
+@media only screen and (max-width: 768px) {
+    body {
+        font-size: 12px;
+    }
+
+    h1 {
+        font-size: 10px;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .form-container {
+        padding: 0;
+    }
+
+    form {
+        padding: 0;
+    }
+
+    .para {
+        display: none;
+    }
+
+    .social-container a {
+        height: 30px;
+        width: 30px;
+    }
+
+    label {
+       
+        top: 30px;
+    }
+
+    .button-container {
+        text-align: center;
+    }
+
+  .signup,
+  .login {
+      font-size: 10px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 70%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+  }
+  .loginandsignuppara{
+    display: none;
+  }
+
+        #overlayBtn {
+        text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
 }

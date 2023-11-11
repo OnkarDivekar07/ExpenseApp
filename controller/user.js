@@ -85,10 +85,8 @@ exports.updatetoken = async (req, res) => {
         const user = await userdetailstable.findOne({ where: { id: decodedToken.userid } });
 
         if (user.ispremiumuser) {
-            console.log(user.ispremiumuser);
             const newToken = genrateAcesstoken(user.id, user.ispremiumuser);
-            console.log(user.id);
-
+    
             return res.json({ success: true, message: 'Login successful', token: newToken });
         } else {
             // User not found with the provided id, return an error message
