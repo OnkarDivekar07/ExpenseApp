@@ -4,15 +4,15 @@ require('dotenv').config();
 const Mailgun = require('mailgun.js');
 const userdetailstable=require('../model/userdetails')
 
-const mailgun = new Mailgun(formData);
-const client = mailgun.client({
-    username: 'api',
-    key: process.env.MAILGUN_API_KEY,
-    domain: process.env.MAILGUN_DOMAIN,
-});
 
 
 exports.forgotpassword = async (req, res) => {
+    const mailgun = new Mailgun(formData);
+    const client = mailgun.client({
+        username: 'api',
+        key: process.env.MAILGUN_API_KEY,
+        domain: process.env.MAILGUN_DOMAIN,
+    });
     try {
         const { email } = req.body;
         const user = await userdetailstable.findOne({ where: { email } });
