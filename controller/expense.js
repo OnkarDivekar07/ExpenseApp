@@ -122,7 +122,6 @@ exports.leaderboard = async (req, res) => {
 };
 
 
-
 exports.downloadExpenses = async (req, res) => {
     const data = await expense.findAll({ where: { userId: req.userId.userid } })
     console.log(data)

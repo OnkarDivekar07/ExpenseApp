@@ -11,7 +11,6 @@ const client = mailgun.client({
     domain: process.env.MAILGUN_DOMAIN,
 });
 
-// ... (previous imports)
 
 exports.forgotpassword = async (req, res) => {
     try {

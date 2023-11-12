@@ -48,4 +48,3 @@ exports.updatetranctionstatus = async (req, res) => {
         throw new Error(error);
     }
 };
-
