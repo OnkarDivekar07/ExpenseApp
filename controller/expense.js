@@ -28,7 +28,6 @@ function uploadToS3(stringfyexpense, filename) {
                 reject(err)
             }
             else {
-                console.log("sucess", s3response)
                 resolve(s3response.Location)
             }
         })
@@ -124,7 +123,6 @@ exports.leaderboard = async (req, res) => {
 
 exports.downloadExpenses = async (req, res) => {
     const data = await expense.findAll({ where: { userId: req.userId.userid } })
-    console.log(data)
     const stringfyexpense = JSON.stringify(data)
     const userId = req.userId.userid
     const filename = `Expense${userId}/${new Date()}.txt`
