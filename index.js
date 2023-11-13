@@ -36,7 +36,7 @@ app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
 
 app.use((req, res)=>{
-    res.sendFile(path.join(__dirname,`view/${req.url}`))
+    res.sendFile(path.join(__dirname,'index.html'))
 })
 
 
