@@ -7,7 +7,6 @@ const cors = require('cors');
 const helmet=require('helmet')
 const fs = require('fs');
 const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 //models
@@ -34,17 +33,6 @@ app.use('/user', user)
 app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
-
-
-app.use((req, res) => {
-    console.log(req.url);
-
-    // For the root URL ("/"), serve the index.html directly
-    const filePath = req.url === '/' ? 'index.html' : req.url;
-
-    res.sendFile(path.join(__dirname, 'view', filePath));
-});
-
 
 
 //error loging middleware
