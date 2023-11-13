@@ -139,7 +139,7 @@
 
         loginbutton.addEventListener('click', (event) => {
             event.preventDefault();
-            if (!loginemail.value || !loginpassword.value) {
+             if (!loginemail.value || !loginpassword.value) {
                 message.innerHTML = 'Please fill out all required fields';
                 message.style.color = 'red';
                 setTimeout(() => message.remove(), 5000);
@@ -156,7 +156,7 @@
                     if (response.data.success) {
                         console.log(response)
                         localStorage.setItem('token', response.data.token)
-                        window.location.href = '/expense.html'
+                        window.location.href = '../view/expense.html'
                     }
                     else {
                         message.innerHTML = 'Invalid email or password';
