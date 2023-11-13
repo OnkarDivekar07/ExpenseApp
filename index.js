@@ -7,7 +7,7 @@ const cors = require('cors');
 const helmet=require('helmet')
 const fs = require('fs');
 const path = require('path');
-app.use(express.static(path.join(__dirname, 'view')));
+
 
 //models
 const expense = require('./model/expensemodel')
@@ -28,16 +28,15 @@ const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), {
 app.use(cors())
 app.use(express.json())
 app.use(helmet())
-
+app.use(express.static(path.join(__dirname, 'view')));
 //redirection
 app.use('/user', user)
 app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
 
-app.use((req, res)=>{
-    res.sendFile(path.join(__dirname,'index.html'))
-})
+
+
 
 
 //error loging middleware
