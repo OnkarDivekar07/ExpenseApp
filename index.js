@@ -7,6 +7,7 @@ const cors = require('cors');
 const helmet=require('helmet')
 const fs = require('fs');
 const path = require('path');
+app.use(express.static(path.join(__dirname, 'view')));
 
 //models
 const expense = require('./model/expensemodel')
@@ -33,6 +34,10 @@ app.use('/user', user)
 app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
+
+app.use((req, res)=>{
+    res.sendFile(path.join(__dirname,`view/${req.url}`))
+})
 
 
 //error loging middleware
