@@ -32,9 +32,9 @@
 
         form.addEventListener('submit', postemail);
 
-    const instance = axios.create({
-        baseURL: "http://43.205.116.5:3553"
-    });
+        const instance = axios.create({
+            baseURL: "http://43.205.116.5:3553"
+        });
         function postemail(e) {
             e.preventDefault();
             const userEmail = {

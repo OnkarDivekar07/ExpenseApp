@@ -14,7 +14,6 @@ const expense = require('./model/expensemodel')
 const users = require('./model/userdetails')
 const order = require('./model/order')
 const Forgotpassword = require('./model/forgotpassword');
-
 //routes
 const user = require('./routes/user')
 const expenseroute = require('./routes/expense')
@@ -28,12 +27,18 @@ const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), {
 app.use(cors())
 app.use(express.json())
 app.use(helmet())
+app.use(express.static(path.join(__dirname, 'view')));
+
 //redirection
 app.use('/user', user)
 app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
 
+app.get('*', (req, res) => {
+    console.log(req.url)
+    res.sendFile(path.join(__dirname, `/${req.url}`));
+});
 
 //error loging middleware
 app.use((err, req, res, next) => {

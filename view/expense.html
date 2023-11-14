@@ -47,24 +47,24 @@
             </div>
         </div>
     </div>
-<div class="container mt-4">
-    <div class="table-container">
-        <table id="userTable" class="table table table-dark table-borderless" style="background-color: #f0f8ff;">
-           <thead class="blue-bg">
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Description</th>
-                    <th>Category</th>
-                    <th></th>
-                    <!-- You can add more headers if needed -->
-                </tr>
-            </thead>
-            <tbody id="userTableBody">
-                <!-- User data rows will be added here -->
-            </tbody>
-        </table>
-    </div>
+    <div class="container mt-4">
+        <div class="table-container">
+            <table id="userTable" class="table table table-dark table-borderless" style="background-color: #f0f8ff;">
+                <thead class="blue-bg">
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th></th>
+                        <!-- You can add more headers if needed -->
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User data rows will be added here -->
+                </tbody>
+            </table>
+        </div>
         <div class="pagination-controls text-center mt-4">
             <button id="prevPageButton" class="btn btn-primary">Previous</button>
             <span>Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
@@ -82,7 +82,7 @@
 
         form.addEventListener('submit', saveExpense);
 
-       async function saveExpense(event) {
+        async function saveExpense(event) {
             event.preventDefault();
             const amount = event.target.amount.value;
             const description = event.target.description.value;
@@ -122,15 +122,15 @@
             document.getElementById('totalPages').textContent = totalPages;
         }
 
-      function buttons(responsedata) {
+        function buttons(responsedata) {
             const row = document.createElement('tr');
 
-          const createdAtDate = new Date(responsedata.createdAt);
-          const formattedDate = createdAtDate.toLocaleDateString();
+            const createdAtDate = new Date(responsedata.createdAt);
+            const formattedDate = createdAtDate.toLocaleDateString();
 
-          const dateCell = document.createElement('td');
-          dateCell.textContent = formattedDate;
-          row.appendChild(dateCell);
+            const dateCell = document.createElement('td');
+            dateCell.textContent = formattedDate;
+            row.appendChild(dateCell);
 
             const amountCell = document.createElement('td');
             amountCell.textContent = responsedata.amount;
@@ -154,7 +154,7 @@
                 const deleteid = responsedata.id;
                 axios.delete(`http://43.205.116.5:3553/expense/deleteexpense/${deleteid}`)
                     .then((response) => {
-                       console.log("deleted")
+                        console.log("deleted")
                     })
                     .catch((err) => {
                         console.log(err);
@@ -187,7 +187,7 @@
             const decodedtoken = parseJwt(token);
             const navbarContainer = document.getElementById('navbar-container');
             const xhr = new XMLHttpRequest();
-            
+
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     navbarContainer.innerHTML = xhr.responseText;
@@ -230,12 +230,12 @@
         // ... (The rest of your code)
 
 
-       
 
 
-      
-      
-       
+
+
+
+
         document.getElementById('nextPageButton').addEventListener('click', () => {
             const token = localStorage.getItem('token');
             const decodedtoken = parseJwt(token);
