@@ -26,7 +26,13 @@ const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), {
 //middlewares
 app.use(cors())
 app.use(express.json())
-app.use(helmet())
+//middlewares
+app.use(cors());
+app.use(express.json());
+
+// Rest of your code...
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'view')));
 
 //redirection
