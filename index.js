@@ -26,9 +26,6 @@ const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), {
 //middlewares
 app.use(cors())
 app.use(express.json())
-//middlewares
-app.use(cors());
-app.use(express.json());
 
 // Rest of your code...
 
