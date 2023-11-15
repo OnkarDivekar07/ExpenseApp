@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const sequelize = require('./util/database');
 const cors = require('cors');
-const helmet=require('helmet')
+const helmet = require('helmet')
 const fs = require('fs');
 const path = require('path');
 
@@ -39,7 +39,6 @@ app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
 
 app.get('*', (req, res) => {
-    console.log(req.url)
     res.sendFile(path.join(__dirname, `/${req.url}`));
 });
 
@@ -49,7 +48,6 @@ app.use((err, req, res, next) => {
     errorLogStream.write(`${new Date().toISOString()} - ${err.stack}\n`);
     res.status(500).send('Something failed!');
 });
-
 
 // Define associations
 expense.belongsTo(users, { foreignKey: 'userId' });

@@ -6,8 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker Login</title>
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- CSS stylesheet -->
-    <link rel="stylesheet" href="\style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -23,11 +25,11 @@
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
-                    <input type="text" name="name" placeholder="Name" id="name" required />
+                    <input type="text" name="name" placeholder="Name" id="name" required  />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" id="email" required />
+                    <input type="email" placeholder="Email" name="email" id="email" required autocomplete="username"/>
                     <label></label>
                 </div>
                 <div class="infield">
@@ -49,7 +51,7 @@
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" id="loginemail" required />
+                    <input type="email" placeholder="Email" name="email" id="loginemail" required autocomplete="username" />
                     <label></label>
                 </div>
                 <div class="infield">
@@ -79,11 +81,8 @@
         </div>
     </div>
     <!-- JavaScript code -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-
-
-"></script>
     <script>
         const container = document.getElementById('container');
         const overlayCon = document.getElementById('overlayCon');
@@ -96,9 +95,8 @@
         const loginpassword = document.getElementById('loginpassword')
         const loginbutton = document.getElementById('login')
         const message = document.getElementById('message')
-        const signupmessage = document.getElementById('signupmessage');
+        const signupmessage = document.getElementById('signupmessage')
         const forgotpassword = document.getElementById('forgotpassword');
-        console.log(forgotpassword);
         overlayBtn.addEventListener('click', () => {
             container.classList.toggle('right-panel-active');
         });
@@ -151,7 +149,7 @@
                 email: loginemail.value,
                 password: loginpassword.value,
             };
-            console.log('here')
+
             axios.post('http://43.205.116.5:3553/user/login', data)
                 .then(response => {
                     if (response.data.success) {
