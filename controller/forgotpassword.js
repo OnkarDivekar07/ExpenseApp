@@ -21,7 +21,7 @@ exports.forgotpassword = async (req, res) => {
             const id = uuid.v4();
             user.createForgotpassword({ id, active: true });
 
-            const link = `http://localhost:${process.env.PORT}/resetpassword/resetpassword/${id}`;
+            const link = `http://43.205.116.5:${process.env.PORT}/resetpassword/resetpassword/${id}`;
             const messageData = {
                 from: 'Excited User <onkardivekar07@gmail.com>',
                 to: email,

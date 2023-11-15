@@ -4,16 +4,16 @@ const express = require('express');
 const app = express();
 const sequelize = require('./util/database');
 const cors = require('cors');
-const helmet=require('helmet')
+const helmet = require('helmet')
 const fs = require('fs');
 const path = require('path');
+
 
 //models
 const expense = require('./model/expensemodel')
 const users = require('./model/userdetails')
 const order = require('./model/order')
 const Forgotpassword = require('./model/forgotpassword');
-
 //routes
 const user = require('./routes/user')
 const expenseroute = require('./routes/expense')
@@ -26,7 +26,11 @@ const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), {
 //middlewares
 app.use(cors())
 app.use(express.json())
-app.use(helmet())
+
+// Rest of your code...
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'view')));
 
 //redirection
 app.use('/user', user)
@@ -34,6 +38,9 @@ app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
 app.use('/resetpassword', resetpassword)
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, `/${req.url}`));
+});
 
 //error loging middleware
 app.use((err, req, res, next) => {
@@ -41,7 +48,6 @@ app.use((err, req, res, next) => {
     errorLogStream.write(`${new Date().toISOString()} - ${err.stack}\n`);
     res.status(500).send('Something failed!');
 });
-
 
 // Define associations
 expense.belongsTo(users, { foreignKey: 'userId' });
