@@ -42,12 +42,6 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, `/${req.url}`));
 });
 
-//error loging middleware
-app.use((err, req, res, next) => {
-    // Log the error to the error.log file
-    errorLogStream.write(`${new Date().toISOString()} - ${err.stack}\n`);
-    res.status(500).send('Something failed!');
-});
 
 // Define associations
 expense.belongsTo(users, { foreignKey: 'userId' });
