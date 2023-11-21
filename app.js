@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const sequelize = require('./util/database');
 const cors = require('cors');
-const fs = require('fs');
 const path = require('path');
 
 

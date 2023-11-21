@@ -23,7 +23,7 @@ exports.forgotpassword = async (req, res) => {
             const id = uuid.v4();
             await user.createForgotpassword({ id, active: true });
 
-            const link = `http://43.205.116.5/resetpassword/resetpassword/${id}`;
+            const link = `http://43.205.116.5/password/resetpassword/${id}`;
             const messageData = {
                 from: 'Excited User <divekaronkar787@gmail.com>',
                 to: email,
@@ -60,7 +60,7 @@ exports.resetpassword = async (req, res) => {
                             console.log('called')
                         }
                     </script>
-                    <form action="/resetpassword/updatepassword/${id}" method="get">
+                    <form action="/password/updatepassword/${id}" method="get">
                         <label for="newpassword">Enter New password</label>
                         <input name="newpassword" type="password" required></input>
                         <button>reset password</button>
