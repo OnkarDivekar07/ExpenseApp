@@ -26,33 +26,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
-    <script>
-        const email = document.getElementById('email');
-        const form = document.getElementById('form');
-
-        form.addEventListener('submit', postemail);
-
-        const instance = axios.create({
-            baseURL: "http://43.205.116.5:3553"
-        });
-        function postemail(e) {
-            e.preventDefault();
-            const userEmail = {
-                email: email.value
-            };
-
-            instance.post('/resetpassword/forgotpassword', userEmail)
-                .then(response => {
-                    if (response.status === 202) {
-                        document.body.innerHTML += '<div style="color:green;">Mail Successfully sent, please check your inbox<div>';
-                    } else {
-                        throw new Error('Something went wrong!!!');
-                    }
-                })
-                .catch(err => {
-                    document.body.innerHTML += `<div style="color:red;">${err} <div>`;
-                });
-        }
+    <script src="\js\email.js">
     </script>
 </body>
 

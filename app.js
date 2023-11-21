@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const sequelize = require('./util/database');
 const cors = require('cors');
-const helmet = require('helmet')
 const fs = require('fs');
 const path = require('path');
 
@@ -14,41 +13,48 @@ const expense = require('./model/expensemodel')
 const users = require('./model/userdetails')
 const order = require('./model/order')
 const Forgotpassword = require('./model/forgotpassword');
+
+
 //routes
+const mainpageroute = require('./routes/mainpageroute')
 const user = require('./routes/user')
 const expenseroute = require('./routes/expense')
 const purchase = require('./routes/purchase')
 const resetpassword = require('./routes/resetpassword')
 
+//creating error log file to log error
+fs.createWriteStream(path.join(__dirname, 'error.log'), { flags: 'a' });
 
-const errorLogStream = fs.createWriteStream(path.join(__dirname, 'error.log'), { flags: 'a' });
 
 //middlewares
 app.use(cors())
 app.use(express.json())
 
-// Rest of your code...
 
+//static serving 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'view')));
+
 
 //redirection
+app.use(mainpageroute)
 app.use('/user', user)
 app.use('/expense', expenseroute)
 app.use('/purchase', purchase)
-app.use('/resetpassword', resetpassword)
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, `/${req.url}`));
-});
+app.use('/password', resetpassword)
 
 
 // Define associations
-expense.belongsTo(users, { foreignKey: 'userId' });
-users.hasMany(expense, { foreignKey: 'userId' });
-order.belongsTo(users)
+users.hasMany(expense);
+expense.belongsTo(users);
+
+users.hasMany(order);
+order.belongsTo(users);
+
 users.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(users);
+
+
+
 
 //this is to intialise database tables and then start the servers
 sequelize.sync({})
@@ -57,6 +63,5 @@ sequelize.sync({})
         app.listen(process.env.PORT);
     })
     .catch((err) => {
-        errorLogStream.write(`${new Date().toISOString()} - Database Sync Error: ${err.stack}\n`);
-        console.log('Error syncing the database:', err);
+        console.log(err);
     })
