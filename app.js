@@ -22,9 +22,6 @@ const expenseroute = require('./routes/expense')
 const purchase = require('./routes/purchase')
 const resetpassword = require('./routes/resetpassword')
 
-//creating error log file to log error
-fs.createWriteStream(path.join(__dirname, 'error.log'), { flags: 'a' });
-
 
 //middlewares
 app.use(cors())
