@@ -10,6 +10,12 @@ function genrateAcesstoken(id, ispremiumuser) {
 }
 
 
+exports.usergethomePage = (request, response, next) => {
+    response.sendFile('expense.html', { root: 'view' });
+}
+
+
+
 exports.logindetails = async (req, res,) => {
     const { email, password } = req.body;
     try {
@@ -55,10 +61,8 @@ exports.signupdetails = async (req, res, next) => {
             return res.json({ success: true, message: 'Account created successfully' });
         }
         else {
-            return res.json({ success: false, message: 'Account created successfully' });
+            return res.json({ success: false, message: 'This Account already exists' });
         }
-
-
     }
     catch (e) {
         console.log(e);
@@ -87,6 +91,3 @@ exports.updatetoken = async (req, res) => {
     }
 };
 
-exports.usergethomePage = (request, response, next) => {
-    response.sendFile('expense.html', { root: 'view' });
-}

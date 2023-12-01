@@ -47,16 +47,13 @@ exports.postexpense = async (req, res) => {
         const amount = parseInt(req.body.amount, 10);
         const description = req.body.description;
         const catogary = req.body.catogary;
-        const userId = req.userId.userid;
-
-        const newExpense = await expense.create({
+        const userid = req.userId.userid
+        const user = await userdetailstable.findByPk(userid)
+        const newExpense = await user.createExpense({
             amount,
             description,
             catogary,
-            userId,
         });
-
-        const user = await userdetailstable.findByPk(userId);
 
         if (user) {
             user.totalExpenses = user.totalExpenses === null ? amount : user.totalExpenses + amount;
