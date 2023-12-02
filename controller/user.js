@@ -81,7 +81,7 @@ exports.updatetoken = async (req, res) => {
         if (user.ispremiumuser) {
             const newToken = genrateAcesstoken(user.id, user.ispremiumuser);
 
-            return res.json({ success: true, message: 'Login successful', token: newToken });
+            return res.json({ success: true, message: 'token updated', token: newToken });
         } else {
             return res.json({ success: false, message: 'User not found' });
         }
