@@ -9,6 +9,9 @@ const userauthenticate = require('../middleware/auth')
 
 router.get('/purchasepremium', userauthenticate.verifyToken, Controller.purchasepremium)
 router.post('/updatetranctionstatus', userauthenticate.verifyToken, Controller.updatetranctionstatus);
+router.get('/leaderboard', Controller.leaderboardPage);
+router.get('/downloadreport', Controller.downloadreport);
+router.get('/premiummembership', Controller.premiummembership);
 
 
 
